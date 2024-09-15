@@ -7,6 +7,9 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [1.0.2] - 2024-09-15
+- Removed automatically register on Filament
+
 ## [1.0.1] - 2024-09-15
 - Added automatically register on Filament
 

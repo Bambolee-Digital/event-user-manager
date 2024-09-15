@@ -28,6 +28,21 @@ php artisan vendor:publish --provider="BamboleeDigital\EventUserManager\EventUse
 
 This will create a `config/event-user-manager.php` file. You can modify the settings as needed.
 
+
+You will need to register the following resources in your filament configuration file:
+
+```php
+    use BamboleeDigital\EventUserManager\Filament\Resources\EventResource;
+    use BamboleeDigital\EventUserManager\Filament\Resources\EventTypeResource;
+    use BamboleeDigital\OnboardingPackage\Filament\Resources\QuestionResource;
+
+    ->resources([
+        EventResource::class,
+        EventTypeResource::class,
+        RecurrencePatternResource::class,
+    ])
+```
+
 ## Usage
 
 ### API
