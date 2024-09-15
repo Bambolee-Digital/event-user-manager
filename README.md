@@ -55,52 +55,81 @@ The package provides API endpoints for managing events, notes, attachments, and 
 - `POST /api/events/{event}/images`: Add an image to an event
 - `DELETE /api/events/{event}/images/{image}`: Remove an image from an event
 
-### Examples
+### Example: Creating a Comprehensive Event
 
-#### Creating an event with attachments
-
-```php
-$response = $client->post('/api/events', [
-    'multipart' => [
-        [
-            'name' => 'name',
-            'contents' => 'My Event'
-        ],
-        [
-            'name' => 'description',
-            'contents' => 'This is a test event'
-        ],
-        [
-            'name' => 'start_date',
-            'contents' => '2024-01-01 10:00:00'
-        ],
-        [
-            'name' => 'end_date',
-            'contents' => '2024-01-01 12:00:00'
-        ],
-        [
-            'name' => 'attachments[]',
-            'contents' => fopen('path/to/file.pdf', 'r'),
-            'filename' => 'file.pdf'
-        ],
-        [
-            'name' => 'images[]',
-            'contents' => fopen('path/to/image.jpg', 'r'),
-            'filename' => 'image.jpg'
-        ]
-    ]
-]);
-```
-
-#### Adding a note to an event
+Here's an example of creating an event with all possible details, including metadata, annotations, attachments, and images:
 
 ```php
-$response = $client->post("/api/events/{$eventId}/notes", [
-    'json' => [
-        'content' => 'This is a note for the event'
-    ]
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\MultipartStream;
+
+$client = new Client([
+    'base_uri' => 'http://your-api-base-url/',
+    'headers' => [
+        'Authorization' => 'Bearer YOUR_API_TOKEN',
+        'Accept' => 'application/json',
+    ],
 ]);
+
+$multipart = [
+    ['name' => 'name', 'contents' => 'Annual Company Retreat'],
+    ['name' => 'description', 'contents' => 'Our yearly company-wide retreat for team building and strategy planning.'],
+    ['name' => 'event_type_id', 'contents' => '1'],  // Assuming 1 is the ID for 'Corporate Event' type
+    ['name' => 'start_date', 'contents' => '2024-07-15 09:00:00'],
+    ['name' => 'end_date', 'contents' => '2024-07-17 17:00:00'],
+    ['name' => 'status', 'contents' => 'active'],
+    ['name' => 'recurrence_pattern_id', 'contents' => '2'],  // Assuming 2 is the ID for 'Yearly' recurrence
+    ['name' => 'frequency_type', 'contents' => 'yearly'],
+    ['name' => 'frequency_count', 'contents' => '5'],  // Repeat for 5 years
+    
+    // Metadata
+    ['name' => 'metadata[location]', 'contents' => 'Mountain Resort'],
+    ['name' => 'metadata[expected_attendees]', 'contents' => '150'],
+    
+    // Main event attachments
+    [
+        'name' => 'attachments[]',
+        'contents' => fopen('path/to/schedule.pdf', 'r'),
+        'filename' => 'retreat_schedule.pdf',
+    ],
+    [
+        'name' => 'images[]',
+        'contents' => fopen('path/to/venue.jpg', 'r'),
+        'filename' => 'retreat_venue.jpg',
+    ],
+    
+    // Notes with their own attachments and images
+    ['name' => 'notes[0][content]', 'contents' => 'Remember to book flight tickets for overseas participants.'],
+    [
+        'name' => 'notes[0][attachments][]',
+        'contents' => fopen('path/to/flight_details.pdf', 'r'),
+        'filename' => 'flight_details.pdf',
+    ],
+    
+    ['name' => 'notes[1][content]', 'contents' => 'Catering menu for the event.'],
+    [
+        'name' => 'notes[1][images][]',
+        'contents' => fopen('path/to/menu.jpg', 'r'),
+        'filename' => 'catering_menu.jpg',
+    ],
+];
+
+$response = $client->post('api/events', [
+    'multipart' => $multipart,
+]);
+
+$eventData = json_decode($response->getBody(), true);
+echo "Event created with ID: " . $eventData['id'];
 ```
+
+This example demonstrates creating an event with:
+- Basic event details (name, description, dates, status)
+- Event type and recurrence pattern
+- Metadata (location and expected attendees)
+- Main event attachments and images
+- Notes with their own attachments and images
+
+Remember to replace `'http://your-api-base-url/'` with your actual API URL and `'YOUR_API_TOKEN'` with a valid authentication token.
 
 ### Filament Admin
 
@@ -200,52 +229,81 @@ O pacote fornece endpoints de API para gerenciar eventos, notas, anexos e imagen
 - `POST /api/events/{event}/images`: Adicionar uma imagem a um evento
 - `DELETE /api/events/{event}/images/{image}`: Remover uma imagem de um evento
 
-### Exemplos
+### Exemplo: Criando um Evento Completo
 
-#### Criando um evento com anexos
-
-```php
-$response = $client->post('/api/events', [
-    'multipart' => [
-        [
-            'name' => 'name',
-            'contents' => 'Meu Evento'
-        ],
-        [
-            'name' => 'description',
-            'contents' => 'Este é um evento de teste'
-        ],
-        [
-            'name' => 'start_date',
-            'contents' => '2024-01-01 10:00:00'
-        ],
-        [
-            'name' => 'end_date',
-            'contents' => '2024-01-01 12:00:00'
-        ],
-        [
-            'name' => 'attachments[]',
-            'contents' => fopen('caminho/para/arquivo.pdf', 'r'),
-            'filename' => 'arquivo.pdf'
-        ],
-        [
-            'name' => 'images[]',
-            'contents' => fopen('caminho/para/imagem.jpg', 'r'),
-            'filename' => 'imagem.jpg'
-        ]
-    ]
-]);
-```
-
-#### Adicionando uma nota a um evento
+Aqui está um exemplo de criação de um evento com todos os detalhes possíveis, incluindo metadados, anotações, anexos e imagens:
 
 ```php
-$response = $client->post("/api/events/{$eventId}/notes", [
-    'json' => [
-        'content' => 'Esta é uma nota para o evento'
-    ]
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\MultipartStream;
+
+$client = new Client([
+    'base_uri' => 'http://sua-url-base-da-api/',
+    'headers' => [
+        'Authorization' => 'Bearer SEU_TOKEN_DE_API',
+        'Accept' => 'application/json',
+    ],
 ]);
+
+$multipart = [
+    ['name' => 'name', 'contents' => 'Retiro Anual da Empresa'],
+    ['name' => 'description', 'contents' => 'Nosso retiro anual para toda a empresa para construção de equipe e planejamento estratégico.'],
+    ['name' => 'event_type_id', 'contents' => '1'],  // Supondo que 1 é o ID para o tipo 'Evento Corporativo'
+    ['name' => 'start_date', 'contents' => '2024-07-15 09:00:00'],
+    ['name' => 'end_date', 'contents' => '2024-07-17 17:00:00'],
+    ['name' => 'status', 'contents' => 'active'],
+    ['name' => 'recurrence_pattern_id', 'contents' => '2'],  // Supondo que 2 é o ID para recorrência 'Anual'
+    ['name' => 'frequency_type', 'contents' => 'yearly'],
+    ['name' => 'frequency_count', 'contents' => '5'],  // Repetir por 5 anos
+    
+    // Metadados
+    ['name' => 'metadata[location]', 'contents' => 'Resort na Montanha'],
+    ['name' => 'metadata[expected_attendees]', 'contents' => '150'],
+    
+    // Anexos principais do evento
+    [
+        'name' => 'attachments[]',
+        'contents' => fopen('caminho/para/cronograma.pdf', 'r'),
+        'filename' => 'cronograma_retiro.pdf',
+    ],
+    [
+        'name' => 'images[]',
+        'contents' => fopen('caminho/para/local.jpg', 'r'),
+        'filename' => 'local_retiro.jpg',
+    ],
+    
+    // Notas com seus próprios anexos e imagens
+    ['name' => 'notes[0][content]', 'contents' => 'Lembrar de reservar passagens aéreas para participantes internacionais.'],
+    [
+        'name' => 'notes[0][attachments][]',
+        'contents' => fopen('caminho/para/detalhes_voo.pdf', 'r'),
+        'filename' => 'detalhes_voo.pdf',
+    ],
+    
+    ['name' => 'notes[1][content]', 'contents' => 'Menu de catering para o evento.'],
+    [
+        'name' => 'notes[1][images][]',
+        'contents' => fopen('caminho/para/menu.jpg', 'r'),
+        'filename' => 'menu_catering.jpg',
+    ],
+];
+
+$response = $client->post('api/events', [
+    'multipart' => $multipart,
+]);
+
+$eventData = json_decode($response->getBody(), true);
+echo "Evento criado com ID: " . $eventData['id'];
 ```
+
+Este exemplo demonstra a criação de um evento com:
+- Detalhes básicos do evento (nome, descrição, datas, status)
+- Tipo de evento e padrão de recorrência
+- Metadados (localização e número esperado de participantes)
+- Anexos e imagens principais do evento
+- Notas com seus próprios anexos e imagens
+
+Lembre-se de substituir `'http://sua-url-base-da-api/'` pela URL real da sua API e `'SEU_TOKEN_DE_API'` por um token de autenticação válido.
 
 ### Painel de Administração Filament
 
