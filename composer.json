@@ -1,0 +1,33 @@
+{
+  "name": "bambolee-digital/event-user-manager",
+  "description": "A user event management system for Laravel",
+  "version": "1.0.0",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+      {
+          "name": "Bambolee Digital",
+          "email": "contact@bambolee.digital"
+      }
+  ],
+  "require": {
+      "php": "^8.1",
+      "laravel/framework": "^10.0|^11.0",
+      "filament/filament": "^3.0",
+    "spatie/laravel-translatable": "^6.8"
+  },
+  "autoload": {
+      "psr-4": {
+          "BamboleeDigital\\EventUserManager\\": "src/"
+      }
+  },
+  "extra": {
+      "laravel": {
+          "providers": [
+              "BamboleeDigital\\EventUserManager\\EventUserManagerServiceProvider"
+          ]
+      }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
