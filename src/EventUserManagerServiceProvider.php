@@ -4,6 +4,9 @@ namespace BamboleeDigital\EventUserManager;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use BamboleeDigital\EventUserManager\Filament\Resources\EventResource;
+use BamboleeDigital\EventUserManager\Filament\Resources\EventTypeResource;
+use BamboleeDigital\EventUserManager\Filament\Resources\RecurrencePatternResource;
 
 class EventUserManagerServiceProvider extends ServiceProvider
 {
@@ -25,13 +28,15 @@ class EventUserManagerServiceProvider extends ServiceProvider
         //     $this->loadViewsFrom(__DIR__.'/Filament/Resources', 'event-user-manager');
         // }
 
-        // if (class_exists(\Filament\Facades\Filament::class)) {
-        //     \Filament\Facades\Filament::registerResources([
-        //         EventResource::class,
-        //         RecurrencePatternResource::class,
-        //         // Register other resources her
-        //     ]);
-        // }
+        if (class_exists(\Filament\Facades\Filament::class)) {
+            \Filament\Facades\Filament::registerResources([
+                EventResource::class,
+                EventTypeResource::class,
+                RecurrencePatternResource::class,
+                
+                // Register other resources her
+            ]);
+        }
     }
 
     public function register()
