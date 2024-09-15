@@ -2,7 +2,7 @@
 
 [Português](#gerenciador-de-eventos-de-usuário)
 
-Event User Manager is a Laravel package for managing user events with support for recurrence and integration with Filament for administration.
+Event User Manager is a Laravel package for managing user events with support for recurrence, attachments, and integration with Filament for administration.
 
 ## Installation
 
@@ -32,8 +32,9 @@ This will create a `config/event-user-manager.php` file. You can modify the sett
 
 ### API
 
-The package provides API endpoints for managing events. The main endpoints are:
+The package provides API endpoints for managing events, notes, attachments, and images. The main endpoints are:
 
+#### Events
 - `GET /api/events`: List events
 - `POST /api/events`: Create a new event
 - `GET /api/events/{id}`: Get event details
@@ -42,6 +43,64 @@ The package provides API endpoints for managing events. The main endpoints are:
 - `GET /api/events/past`: Get past events
 - `GET /api/events/future`: Get future events
 - `GET /api/events/status/{status}`: Get events by status
+
+#### Notes
+- `POST /api/events/{event}/notes`: Add a note to an event
+- `PUT /api/events/{event}/notes/{note}`: Update a note
+- `DELETE /api/events/{event}/notes/{note}`: Delete a note
+
+#### Attachments and Images
+- `POST /api/events/{event}/attachments`: Add an attachment to an event
+- `DELETE /api/events/{event}/attachments/{attachment}`: Remove an attachment from an event
+- `POST /api/events/{event}/images`: Add an image to an event
+- `DELETE /api/events/{event}/images/{image}`: Remove an image from an event
+
+### Examples
+
+#### Creating an event with attachments
+
+```php
+$response = $client->post('/api/events', [
+    'multipart' => [
+        [
+            'name' => 'name',
+            'contents' => 'My Event'
+        ],
+        [
+            'name' => 'description',
+            'contents' => 'This is a test event'
+        ],
+        [
+            'name' => 'start_date',
+            'contents' => '2024-01-01 10:00:00'
+        ],
+        [
+            'name' => 'end_date',
+            'contents' => '2024-01-01 12:00:00'
+        ],
+        [
+            'name' => 'attachments[]',
+            'contents' => fopen('path/to/file.pdf', 'r'),
+            'filename' => 'file.pdf'
+        ],
+        [
+            'name' => 'images[]',
+            'contents' => fopen('path/to/image.jpg', 'r'),
+            'filename' => 'image.jpg'
+        ]
+    ]
+]);
+```
+
+#### Adding a note to an event
+
+```php
+$response = $client->post("/api/events/{$eventId}/notes", [
+    'json' => [
+        'content' => 'This is a note for the event'
+    ]
+]);
+```
 
 ### Filament Admin
 
@@ -88,7 +147,7 @@ The Event User Manager is open-sourced software licensed under the [MIT license]
 
 [English](#event-user-manager)
 
-O Gerenciador de Eventos de Usuário é um pacote Laravel para gerenciar eventos de usuários com suporte a recorrência e integração com o Filament para administração.
+O Gerenciador de Eventos de Usuário é um pacote Laravel para gerenciar eventos de usuários com suporte a recorrência, anexos e integração com o Filament para administração.
 
 ## Instalação
 
@@ -118,8 +177,9 @@ Isso criará um arquivo `config/event-user-manager.php`. Você pode modificar as
 
 ### API
 
-O pacote fornece endpoints de API para gerenciar eventos. Os principais endpoints são:
+O pacote fornece endpoints de API para gerenciar eventos, notas, anexos e imagens. Os principais endpoints são:
 
+#### Eventos
 - `GET /api/events`: Listar eventos
 - `POST /api/events`: Criar um novo evento
 - `GET /api/events/{id}`: Obter detalhes de um evento
@@ -128,6 +188,64 @@ O pacote fornece endpoints de API para gerenciar eventos. Os principais endpoint
 - `GET /api/events/past`: Obter eventos passados
 - `GET /api/events/future`: Obter eventos futuros
 - `GET /api/events/status/{status}`: Obter eventos por status
+
+#### Notas
+- `POST /api/events/{event}/notes`: Adicionar uma nota a um evento
+- `PUT /api/events/{event}/notes/{note}`: Atualizar uma nota
+- `DELETE /api/events/{event}/notes/{note}`: Excluir uma nota
+
+#### Anexos e Imagens
+- `POST /api/events/{event}/attachments`: Adicionar um anexo a um evento
+- `DELETE /api/events/{event}/attachments/{attachment}`: Remover um anexo de um evento
+- `POST /api/events/{event}/images`: Adicionar uma imagem a um evento
+- `DELETE /api/events/{event}/images/{image}`: Remover uma imagem de um evento
+
+### Exemplos
+
+#### Criando um evento com anexos
+
+```php
+$response = $client->post('/api/events', [
+    'multipart' => [
+        [
+            'name' => 'name',
+            'contents' => 'Meu Evento'
+        ],
+        [
+            'name' => 'description',
+            'contents' => 'Este é um evento de teste'
+        ],
+        [
+            'name' => 'start_date',
+            'contents' => '2024-01-01 10:00:00'
+        ],
+        [
+            'name' => 'end_date',
+            'contents' => '2024-01-01 12:00:00'
+        ],
+        [
+            'name' => 'attachments[]',
+            'contents' => fopen('caminho/para/arquivo.pdf', 'r'),
+            'filename' => 'arquivo.pdf'
+        ],
+        [
+            'name' => 'images[]',
+            'contents' => fopen('caminho/para/imagem.jpg', 'r'),
+            'filename' => 'imagem.jpg'
+        ]
+    ]
+]);
+```
+
+#### Adicionando uma nota a um evento
+
+```php
+$response = $client->post("/api/events/{$eventId}/notes", [
+    'json' => [
+        'content' => 'Esta é uma nota para o evento'
+    ]
+]);
+```
 
 ### Painel de Administração Filament
 
